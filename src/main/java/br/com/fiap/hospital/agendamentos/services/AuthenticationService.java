@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -28,22 +29,22 @@ public class AuthenticationService {
         );
 
         var now = Instant.now();
-        var roles = authentication.getAuthorities().stream()
+        var authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.toList());
 
 
-        var accessToken = getAccessToken(userDTO.username(), now, roles);
+        var accessToken = getAccessToken(userDTO.username(), now, authorities);
 
         return new AuthDTO(accessToken);
     }
 
-    private String getAccessToken(String username, Instant now, String roles) {
+    private String getAccessToken(String username, Instant now, List<String> authorities) {
         var claims = JwtClaimsSet.builder()
                 .subject(username)
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(60 * 30)) // 30 minutos
-                .claim("roles", roles)
+                .claim("authorities", authorities)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
