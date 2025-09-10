@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
-public class AutController {
+public class AuthController {
 
     private final AuthenticationService authenticateService;
 
