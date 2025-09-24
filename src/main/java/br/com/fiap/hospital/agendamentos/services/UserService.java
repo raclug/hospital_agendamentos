@@ -26,4 +26,10 @@ public class UserService {
 
         userRepository.save(userEntity);
     }
+
+    public String getNameById(Long id) {
+        return userRepository.findById(id)
+                .map(UserEntity::getName)
+                .orElse("Unknown User");
+    }
 }

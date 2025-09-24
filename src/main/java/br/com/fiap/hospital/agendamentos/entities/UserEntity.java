@@ -17,7 +17,11 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
+
+    private String name;
+
     private String password;
 
     @ElementCollection(fetch = FetchType.LAZY)
