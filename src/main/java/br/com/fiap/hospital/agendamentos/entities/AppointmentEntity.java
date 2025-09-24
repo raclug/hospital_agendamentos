@@ -3,13 +3,12 @@ package br.com.fiap.hospital.agendamentos.entities;
 import br.com.fiap.hospital.agendamentos.enumeration.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointments")
-@Getter
+@Getters
 @Setter
 @Builder
 @AllArgsConstructor
