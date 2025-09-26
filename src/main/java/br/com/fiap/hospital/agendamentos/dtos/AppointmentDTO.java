@@ -4,8 +4,9 @@ import br.com.fiap.hospital.agendamentos.enumeration.AppointmentStatus;
 
 import java.time.LocalDateTime;
 
-public record AppointmentDTO(String patient,
-                             String doctor,
+public record AppointmentDTO(Long id,
+                             Long patientId,
+                             Long doctorId,
                              LocalDateTime appointmentDate,
                              String reason,
                              String notes,

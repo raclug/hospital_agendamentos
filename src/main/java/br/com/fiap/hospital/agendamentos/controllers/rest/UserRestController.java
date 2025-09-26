@@ -1,4 +1,4 @@
-package br.com.fiap.hospital.agendamentos.controllers;
+package br.com.fiap.hospital.agendamentos.controllers.rest;
 
 import br.com.fiap.hospital.agendamentos.dtos.SaveUserDTO;
 import br.com.fiap.hospital.agendamentos.services.UserService;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
-public class UserController {
+public class UserRestController {
 
     private final UserService userService;
 

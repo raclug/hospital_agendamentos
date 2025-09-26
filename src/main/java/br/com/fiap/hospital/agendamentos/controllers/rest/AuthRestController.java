@@ -1,4 +1,4 @@
-package br.com.fiap.hospital.agendamentos.controllers;
+package br.com.fiap.hospital.agendamentos.controllers.rest;
 
 
 import br.com.fiap.hospital.agendamentos.dtos.AuthDTO;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
-public class AuthController {
+public class AuthRestController {
 
     private final AuthenticationService authenticateService;
 

@@ -55,9 +55,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth").permitAll()
+                        .requestMatchers("/**").permitAll()
+                        /*.requestMatchers("/auth", "/playground", "/playground/**", "/vendor/**", "/graphql").permitAll()
                         .requestMatchers(HttpMethod.POST, "/appointments").hasAnyRole("ENFERMEIRO")
-                        .requestMatchers("/users").hasAnyRole("MEDICO", "ENFERMEIRO", "PACIENTE")
+                        .requestMatchers(HttpMethod.PUT, "/appointments").hasAnyRole("MEDICO")
+                        .requestMatchers("/users").hasAnyRole("MEDICO", "ENFERMEIRO", "PACIENTE")*/
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
