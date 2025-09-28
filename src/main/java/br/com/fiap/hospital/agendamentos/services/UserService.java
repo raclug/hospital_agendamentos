@@ -1,35 +1,15 @@
 package br.com.fiap.hospital.agendamentos.services;
 
 import br.com.fiap.hospital.agendamentos.dtos.SaveUserDTO;
-import br.com.fiap.hospital.agendamentos.entities.UserEntity;
-import br.com.fiap.hospital.agendamentos.repositories.UserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Set;
+public interface UserService {
 
-@Service
-@AllArgsConstructor
-public class UserService {
+    void saveUser(final SaveUserDTO saveUserDTO);
 
-    private final UserRepository userRepository;
+    String getNameById(Long id);
 
-    private final PasswordEncoder passwordEncoder;
+    Long findIdByUsername(String username);
 
-    public void saveUser(final SaveUserDTO saveUserDTO) {
-        var userEntity = UserEntity.builder()
-                .username(saveUserDTO.username())
-                .password(passwordEncoder.encode(saveUserDTO.password()))
-                .roles(Set.of(saveUserDTO.role())).build();
-
-
-        userRepository.save(userEntity);
-    }
-
-    public String getNameById(Long id) {
-        return userRepository.findById(id)
-                .map(UserEntity::getName)
-                .orElse("Unknown User");
-    }
+    UserDetails getUserDetails(String username);
 }

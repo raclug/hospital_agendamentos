@@ -1,0 +1,84 @@
+package br.com.fiap.hospital.agendamentos.services.impl;
+
+import br.com.fiap.hospital.agendamentos.dtos.AppointmentDTO;
+import br.com.fiap.hospital.agendamentos.dtos.CreateAppointmentDTO;
+import br.com.fiap.hospital.agendamentos.dtos.UpdateAppointmentDTO;
+import br.com.fiap.hospital.agendamentos.entities.AppointmentEntity;
+import br.com.fiap.hospital.agendamentos.mappers.AppointmentDTOMapper;
+import br.com.fiap.hospital.agendamentos.repositories.AppointmentRepository;
+import br.com.fiap.hospital.agendamentos.services.AppointmentService;
+import br.com.fiap.hospital.agendamentos.services.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.stereotype.Service;
+
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static br.com.fiap.hospital.agendamentos.mappers.AppointmentDTOMapper.toDTO;
+import static br.com.fiap.hospital.agendamentos.mappers.AppointmentDTOMapper.toNewEntity;
+import static br.com.fiap.hospital.agendamentos.utils.SecurityUtils.isPatient;
+
+@Service
+@AllArgsConstructor
+public class AppointmentServiceImpl implements AppointmentService {
+
+    private final AppointmentRepository appointmentRepository;
+
+    private final UserService userService;
+
+    @Override
+    public AppointmentDTO createAppointment(final CreateAppointmentDTO createAppointmentDTO) {
+
+        var appointmentEntity = toNewEntity(createAppointmentDTO);
+
+        appointmentEntity = appointmentRepository.save(appointmentEntity);
+
+        return toDTO(appointmentEntity);
+    }
+
+    @Override
+    public AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO) {
+
+        var appointmentEntity = appointmentRepository.findById(updateAppointmentDTO.id())
+                .orElseThrow(IllegalArgumentException::new);
+
+        appointmentEntity.setAppointmentDate(updateAppointmentDTO.appointmentDate());
+        appointmentEntity.setNotes(updateAppointmentDTO.notes());
+        appointmentEntity.setStatus(updateAppointmentDTO.status());
+
+        appointmentEntity = appointmentRepository.save(appointmentEntity);
+
+        return toDTO(appointmentEntity);
+    }
+
+    @Override
+    public List<AppointmentDTO> searchAppointments(final Long patientId,
+                                                   final Boolean onlyFuture,
+                                                   final Principal principal) {
+
+        var patientIdFilter = patientId;
+
+        if (isPatient(principal)) {
+            var jwt = (JwtAuthenticationToken) principal;
+            patientIdFilter = userService.findIdByUsername(jwt.getToken().getSubject());
+        }
+
+        var now = LocalDateTime.now();
+        Stream<AppointmentEntity> appointments;
+
+        if (patientIdFilter != null) {
+            appointments = appointmentRepository.findByPatientId(patientIdFilter).stream();
+        } else {
+            appointments = appointmentRepository.findAll().stream();
+        }
+
+        if (Boolean.TRUE.equals(onlyFuture)) {
+            appointments = appointments.filter(a -> a.getAppointmentDate().isAfter(now));
+        }
+
+        return appointments.map(AppointmentDTOMapper::toDTO).toList();
+    }
+}

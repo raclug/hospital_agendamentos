@@ -3,40 +3,15 @@ package br.com.fiap.hospital.agendamentos.services;
 import br.com.fiap.hospital.agendamentos.dtos.AppointmentDTO;
 import br.com.fiap.hospital.agendamentos.dtos.CreateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.dtos.UpdateAppointmentDTO;
-import br.com.fiap.hospital.agendamentos.repositories.AppointmentRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import static br.com.fiap.hospital.agendamentos.mappers.AppointmentDTOMapper.toDTO;
-import static br.com.fiap.hospital.agendamentos.mappers.AppointmentDTOMapper.toNewEntity;
+import java.security.Principal;
+import java.util.List;
 
-@Service
-@AllArgsConstructor
-public class AppointmentService {
+public interface AppointmentService {
 
-    private final AppointmentRepository appointmentRepository;
+    AppointmentDTO createAppointment(final CreateAppointmentDTO createAppointmentDTO);
 
+    AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO);
 
-    public AppointmentDTO createAppointment(final CreateAppointmentDTO createAppointmentDTO) {
-
-        var appointmentEntity = toNewEntity(createAppointmentDTO);
-
-        appointmentEntity = appointmentRepository.save(appointmentEntity);
-
-        return toDTO(appointmentEntity);
-    }
-
-    public AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO) {
-
-        var appointmentEntity = appointmentRepository.findById(updateAppointmentDTO.id())
-                .orElseThrow(IllegalArgumentException::new);
-
-        appointmentEntity.setAppointmentDate(updateAppointmentDTO.appointmentDate());
-        appointmentEntity.setNotes(updateAppointmentDTO.notes());
-        appointmentEntity.setStatus(updateAppointmentDTO.status());
-
-        appointmentEntity = appointmentRepository.save(appointmentEntity);
-
-        return toDTO(appointmentEntity);
-    }
+    List<AppointmentDTO> searchAppointments(Long patientId, Boolean onlyFuture, Principal principal);
 }
