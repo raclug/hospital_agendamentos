@@ -1,7 +1,6 @@
 package br.com.fiap.hospital.agendamentos.config;
 
-import br.com.fiap.hospital.agendamentos.entities.UserEntity;
-import br.com.fiap.hospital.agendamentos.repositories.UserRepository;
+import br.com.fiap.hospital.agendamentos.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,11 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,24 +19,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            UserEntity userEntity = userRepository.findByUsername(username);
-            if (userEntity == null) throw new UsernameNotFoundException("Usuário não encontrado");
-            return User
-                    .withUsername(userEntity.getUsername())
-                    .password(userEntity.getPassword())
-                    .roles(userEntity.getRoles().stream().map(Enum::name).toArray(String[]::new))
-                    .build();
-        };
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return userService::getUserDetails;
     }
 
     @Bean
@@ -55,11 +37,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
-                        /*.requestMatchers("/auth", "/playground", "/playground/**", "/vendor/**", "/graphql").permitAll()
+                        .requestMatchers("/auth").permitAll()
                         .requestMatchers(HttpMethod.POST, "/appointments").hasAnyRole("ENFERMEIRO")
                         .requestMatchers(HttpMethod.PUT, "/appointments").hasAnyRole("MEDICO")
-                        .requestMatchers("/users").hasAnyRole("MEDICO", "ENFERMEIRO", "PACIENTE")*/
+                        .requestMatchers("/graphql", "/users").hasAnyRole("MEDICO", "ENFERMEIRO", "PACIENTE")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

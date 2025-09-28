@@ -1,14 +1,10 @@
-type Query {
-    appointments: [Appointment!]!
-}
-
 type Appointment {
-    id: Int!
-    patientId: Int!
-    doctorId: Int!
+    id: ID!
+    patientId: ID!
+    doctorId: ID!
     appointmentDate: String!
     reason: String!
-    notes: String!
+    notes: String
     appointmentStatus: AppointmentStatus!
     specialty: String!
     location: String!
