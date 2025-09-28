@@ -2,7 +2,6 @@ package br.com.fiap.hospital.agendamentos.services.impl;
 
 import br.com.fiap.hospital.agendamentos.dtos.AuthDTO;
 import br.com.fiap.hospital.agendamentos.dtos.UserDTO;
-import br.com.fiap.hospital.agendamentos.enumeration.Role;
 import br.com.fiap.hospital.agendamentos.services.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,10 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
