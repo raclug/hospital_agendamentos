@@ -1,6 +1,4 @@
-package br.com.fiap.hospital.agendamentos.dtos;
-
-import br.com.fiap.hospital.agendamentos.enumeration.AppointmentStatus;
+package br.com.fiap.hospital.notificacoes.dto;
 
 import java.time.LocalDateTime;
 

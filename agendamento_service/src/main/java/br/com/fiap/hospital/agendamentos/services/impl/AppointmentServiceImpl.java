@@ -5,6 +5,7 @@ import br.com.fiap.hospital.agendamentos.dtos.CreateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.dtos.UpdateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.entities.AppointmentEntity;
 import br.com.fiap.hospital.agendamentos.mappers.AppointmentDTOMapper;
+import br.com.fiap.hospital.agendamentos.producers.AppointmentProducer;
 import br.com.fiap.hospital.agendamentos.repositories.AppointmentRepository;
 import br.com.fiap.hospital.agendamentos.services.AppointmentService;
 import br.com.fiap.hospital.agendamentos.services.UserService;
@@ -27,6 +28,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
 
+    private final AppointmentProducer appointmentProducer;
+
     private final UserService userService;
 
     @Override
@@ -36,7 +39,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentEntity = appointmentRepository.save(appointmentEntity);
 
-        return toDTO(appointmentEntity);
+        var appointmentDTO = toDTO(appointmentEntity);
+
+        sendAppointmentNotification(appointmentDTO);
+
+        return appointmentDTO;
     }
 
     @Override
@@ -51,7 +58,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentEntity = appointmentRepository.save(appointmentEntity);
 
-        return toDTO(appointmentEntity);
+        var appointmentDTO = toDTO(appointmentEntity);
+
+        sendAppointmentNotification(appointmentDTO);
+
+        return appointmentDTO;
     }
 
     @Override
@@ -80,5 +91,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         return appointments.map(AppointmentDTOMapper::toDTO).toList();
+    }
+
+    @Override
+    public void sendAppointmentNotification(AppointmentDTO appointmentDTO) {
+        appointmentProducer.sendAppointment(appointmentDTO);
     }
 }
