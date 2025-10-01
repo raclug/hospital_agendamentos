@@ -103,4 +103,3 @@ Atualiza um agendamento.
 
 ---
 
-> **Observação:** Os exemplos de request/response seguem os DTOs reais do projeto e o padrão snake_case. Consulte os arquivos em `src/main/java/br/com/fiap/hospital/agendamentos/dtos/` para detalhes dos campos.
