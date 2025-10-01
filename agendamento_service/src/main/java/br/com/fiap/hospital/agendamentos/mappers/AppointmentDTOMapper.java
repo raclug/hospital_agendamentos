@@ -16,7 +16,7 @@ public class AppointmentDTOMapper {
                 entity.getAppointmentDate(),
                 entity.getReason(),
                 entity.getNotes(),
-                entity.getStatus().name(),
+                entity.getStatus(),
                 entity.getSpecialty(),
                 entity.getLocation()
         );

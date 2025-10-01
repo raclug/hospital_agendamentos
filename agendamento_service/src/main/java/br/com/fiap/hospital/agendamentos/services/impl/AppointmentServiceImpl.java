@@ -1,6 +1,7 @@
 package br.com.fiap.hospital.agendamentos.services.impl;
 
 import br.com.fiap.hospital.agendamentos.dtos.AppointmentDTO;
+import br.com.fiap.hospital.agendamentos.dtos.AppointmentNotificationDTO;
 import br.com.fiap.hospital.agendamentos.dtos.CreateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.dtos.UpdateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.entities.AppointmentEntity;
@@ -39,11 +40,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentEntity = appointmentRepository.save(appointmentEntity);
 
-        var appointmentDTO = toDTO(appointmentEntity);
+        sendAppointmentNotification(appointmentEntity);
 
-        sendAppointmentNotification(appointmentDTO);
-
-        return appointmentDTO;
+        return toDTO(appointmentEntity);
     }
 
     @Override
@@ -58,11 +57,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentEntity = appointmentRepository.save(appointmentEntity);
 
-        var appointmentDTO = toDTO(appointmentEntity);
+        sendAppointmentNotification(appointmentEntity);
 
-        sendAppointmentNotification(appointmentDTO);
-
-        return appointmentDTO;
+        return toDTO(appointmentEntity);
     }
 
     @Override
@@ -93,8 +90,16 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointments.map(AppointmentDTOMapper::toDTO).toList();
     }
 
-    @Override
-    public void sendAppointmentNotification(AppointmentDTO appointmentDTO) {
+    private void sendAppointmentNotification(AppointmentEntity appointmentEntity) {
+
+        var appointmentDTO = new AppointmentNotificationDTO(
+                userService.getNameById(appointmentEntity.getPatient().getId()),
+                userService.getNameById(appointmentEntity.getDoctor().getId()),
+                appointmentEntity.getAppointmentDate(),
+                appointmentEntity.getSpecialty(),
+                appointmentEntity.getLocation()
+        );
+
         appointmentProducer.sendAppointment(appointmentDTO);
     }
 }

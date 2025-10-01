@@ -10,7 +10,7 @@ public record AppointmentDTO(Long id,
                              LocalDateTime appointmentDate,
                              String reason,
                              String notes,
-                             String appointmentStatus,
+                             AppointmentStatus appointmentStatus,
                              String specialty,
                              String location) {
 }

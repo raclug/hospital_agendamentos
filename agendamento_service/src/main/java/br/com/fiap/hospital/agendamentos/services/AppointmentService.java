@@ -1,6 +1,7 @@
 package br.com.fiap.hospital.agendamentos.services;
 
 import br.com.fiap.hospital.agendamentos.dtos.AppointmentDTO;
+import br.com.fiap.hospital.agendamentos.dtos.AppointmentNotificationDTO;
 import br.com.fiap.hospital.agendamentos.dtos.CreateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.dtos.UpdateAppointmentDTO;
 
@@ -14,6 +15,4 @@ public interface AppointmentService {
     AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO);
 
     List<AppointmentDTO> searchAppointments(Long patientId, Boolean onlyFuture, Principal principal);
-
-    void sendAppointmentNotification(AppointmentDTO appointmentDTO);
 }
