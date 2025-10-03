@@ -12,7 +12,7 @@ public interface AppointmentService {
 
     AppointmentDTO createAppointment(final CreateAppointmentDTO createAppointmentDTO);
 
-    AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO);
+    AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO, final Long appointmentId);
 
     List<AppointmentDTO> searchAppointments(Long patientId, Boolean onlyFuture, Principal principal);
 }

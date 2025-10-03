@@ -38,9 +38,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/appointments").hasAnyRole("ENFERMEIRO")
-                        .requestMatchers(HttpMethod.PUT, "/appointments").hasAnyRole("MEDICO")
-                        .requestMatchers("/users").hasAnyRole("ENFERMEIRO")
+                        .requestMatchers(HttpMethod.POST, "/appointments").hasRole("ENFERMEIRO")
+                        .requestMatchers(HttpMethod.PUT, "/appointments/**").hasRole("MEDICO")
+                        .requestMatchers("/users").hasRole("ENFERMEIRO")
                         .requestMatchers("/graphql").hasAnyRole("MEDICO", "ENFERMEIRO", "PACIENTE")
                         .anyRequest().authenticated()
                 )

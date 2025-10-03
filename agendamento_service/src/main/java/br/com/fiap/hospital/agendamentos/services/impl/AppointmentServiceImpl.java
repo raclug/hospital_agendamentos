@@ -5,6 +5,7 @@ import br.com.fiap.hospital.agendamentos.dtos.AppointmentNotificationDTO;
 import br.com.fiap.hospital.agendamentos.dtos.CreateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.dtos.UpdateAppointmentDTO;
 import br.com.fiap.hospital.agendamentos.entities.AppointmentEntity;
+import br.com.fiap.hospital.agendamentos.exceptions.AppointmentNotFoundException;
 import br.com.fiap.hospital.agendamentos.mappers.AppointmentDTOMapper;
 import br.com.fiap.hospital.agendamentos.producers.AppointmentProducer;
 import br.com.fiap.hospital.agendamentos.repositories.AppointmentRepository;
@@ -46,10 +47,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO) {
+    public AppointmentDTO updateAppointment(final UpdateAppointmentDTO updateAppointmentDTO, final Long appointmentId) {
 
-        var appointmentEntity = appointmentRepository.findById(updateAppointmentDTO.id())
-                .orElseThrow(IllegalArgumentException::new);
+        var appointmentEntity = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("Agendamento não encontrado"));
 
         appointmentEntity.setAppointmentDate(updateAppointmentDTO.appointmentDate());
         appointmentEntity.setNotes(updateAppointmentDTO.notes());

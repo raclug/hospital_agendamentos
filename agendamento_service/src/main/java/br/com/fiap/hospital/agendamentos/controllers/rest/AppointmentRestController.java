@@ -19,8 +19,9 @@ public class AppointmentRestController {
         return appointmentService.createAppointment(createAppointmentDTO);
     }
 
-    @PutMapping
-    public AppointmentDTO update(@RequestBody UpdateAppointmentDTO updateAppointmentDTO) {
-        return appointmentService.updateAppointment(updateAppointmentDTO);
+    @PutMapping("/{appointmentId}")
+    public AppointmentDTO update(@RequestBody UpdateAppointmentDTO updateAppointmentDTO,
+                                 @PathVariable Long appointmentId) {
+        return appointmentService.updateAppointment(updateAppointmentDTO, appointmentId);
     }
 }
