@@ -1,0 +1,80 @@
+services:
+  mysql-db:
+    image: mysql:8.3
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: agendamentos
+      MYSQL_USER: agendamento_user
+      MYSQL_PASSWORD: "!@#$1234qW"
+    ports:
+      - "3306:3306"
+    networks:
+      - agendamentos-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uagendamento_user", "-p!@#$1234qW" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - agendamentos-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    networks:
+      - agendamentos-net
+    healthcheck:
+      test: [ "CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  agendamento-app:
+    container_name: agendamento-app
+    build:
+      context: ./agendamento_service
+      dockerfile: Dockerfile
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - agendamentos-net
+
+  notificacoes-app:
+    container_name: notificacoes-app
+    build:
+      context: ./notificacoes_service
+      dockerfile: Dockerfile
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - agendamentos-net
+
+networks:
+  agendamentos-net:
+    driver: bridge

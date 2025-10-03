@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
@@ -27,8 +29,17 @@ public class JwtConfig {
 
     @Bean
     public KeyPair keyPair() throws Exception {
-        String privateKeyPem = new String(Files.readAllBytes(Paths.get("src/main/resources/private_key.pem")));
-        String publicKeyPem = new String(Files.readAllBytes(Paths.get("src/main/resources/public_key.pem")));
+        String privateKeyPem;
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("private_key.pem")) {
+            assert is != null;
+            privateKeyPem = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        }
+
+        String publicKeyPem;
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("public_key.pem")) {
+            assert is != null;
+            publicKeyPem = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        }
 
         String privateKeyContent = privateKeyPem
                 .replace("-----BEGIN PRIVATE KEY-----", "")

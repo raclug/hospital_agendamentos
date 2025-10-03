@@ -18,9 +18,4 @@ public class UserRestController {
     public void save(@RequestBody SaveUserDTO userDTO) {
         userService.saveUser(userDTO);
     }
-
-    @GetMapping
-    public String teste(final Principal principal) {
-        return "ok";
-    }
 }

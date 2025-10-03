@@ -40,7 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth").permitAll()
                         .requestMatchers(HttpMethod.POST, "/appointments").hasAnyRole("ENFERMEIRO")
                         .requestMatchers(HttpMethod.PUT, "/appointments").hasAnyRole("MEDICO")
-                        .requestMatchers("/graphql", "/users").hasAnyRole("MEDICO", "ENFERMEIRO", "PACIENTE")
+                        .requestMatchers("/users").hasAnyRole("ENFERMEIRO")
+                        .requestMatchers("/graphql").hasAnyRole("MEDICO", "ENFERMEIRO", "PACIENTE")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
