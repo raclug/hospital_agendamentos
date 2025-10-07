@@ -63,6 +63,141 @@
 			"response": []
 		},
 		{
+			"name": "Login Médico",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Extrai o access_token do corpo da resposta",
+							"const accessToken = pm.response.json().access_token;",
+							"",
+							"// Seta o valor na variável de ambiente chamada 'access_token'",
+							"pm.collectionVariables.set(\"access_token\", accessToken);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"medico1\",\n    \"password\": \"123qwe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Paciente1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Extrai o access_token do corpo da resposta",
+							"const accessToken = pm.response.json().access_token;",
+							"",
+							"// Seta o valor na variável de ambiente chamada 'access_token'",
+							"pm.collectionVariables.set(\"access_token\", accessToken);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"paciente1\",\n    \"password\": \"123qwe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Paciente2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Extrai o access_token do corpo da resposta",
+							"const accessToken = pm.response.json().access_token;",
+							"",
+							"// Seta o valor na variável de ambiente chamada 'access_token'",
+							"pm.collectionVariables.set(\"access_token\", accessToken);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"paciente2\",\n    \"password\": \"123qwe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Novo agendamento para Paciente 1",
 			"request": {
 				"auth": {
@@ -95,6 +230,83 @@
 					"port": "8080",
 					"path": [
 						"appointments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Novo agendamento para Paciente 2",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"patient_id\": 4,\n  \"doctor_id\": 1,\n  \"appointment_date\": \"2026-07-01T14:30:00\",\n  \"reason\": \"Dor de cabeça\",\n  \"specialty\": \"Clínico Geral\",\n  \"location\": \"Sala 102\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/appointments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"appointments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar agendamento para Paciente 2",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"appointment_date\": \"2026-08-08T14:30:00\",\n  \"reason\": \"Dor de cabeça alterado\",\n  \"specialty\": \"Clínico Geral\",\n  \"status\": \"COMPLETED\",\n  \"location\": \"Sala 102\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/appointments/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"appointments",
+						"2"
 					]
 				}
 			},
